@@ -1,0 +1,51 @@
+name: challenge
+description: A new Flutter project.
+
+
+publish_to: 'none' 
+
+ 
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.15.0 <3.0.0"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get: ^4.6.1
+  skeletons: ^0.0.3
+  freezed_annotation: ^1.1.0
+  json_annotation: ^4.4.0
+  json_serializable: ^6.1.4
+  shimmer: ^2.0.0
+  get_it: ^7.2.0
+  device_preview: ^1.0.0
+
+ 
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  freezed: ^1.1.1
+  build_runner: ^2.1.7
+  
+  
+  
+
+  
+  flutter_lints: ^1.0.0
+
+
+flutter:
+
+ 
+  uses-material-design: true
+  assets : 
+    - assets/userPrfofile.json
+
+  
+ 
+  
