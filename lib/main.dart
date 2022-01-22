@@ -8,14 +8,7 @@ import 'package:get/get.dart';
 
 void main() {
   setUpGetIt();
-  runApp(
-    DevicePreview(
-      tools: [
-        ...DevicePreview.defaultTools,
-      ],
-      builder: (context) => const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +19,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      builder: DevicePreview.appBuilder,
       home: LoginPage(),
     );
   }

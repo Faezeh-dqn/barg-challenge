@@ -7,7 +7,7 @@ import 'package:flutter/services.dart' show rootBundle;
 class UserRepository {
   late GlobalState globalState;
   UserRepository({required this.globalState});
-
+//i wrote code like this with future type and async await if we want to use api
   Future<List<User>> getUsers() async {
     List users = [];
     var jsonData = await rootBundle.loadString('assets/userPrfofile.json');
