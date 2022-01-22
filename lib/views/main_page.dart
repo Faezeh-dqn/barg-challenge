@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:challenge/models/user.dart';
 import 'package:challenge/viewmodels/main_page_viewmodel.dart';
 import 'package:challenge/views/owner_profile_page.dart';
@@ -9,21 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Mainpage extends StatelessWidget {
-  User owner;
-  Mainpage({required this.owner});
+  const Mainpage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     MainController mainController = Get.put(MainController());
     mainController.onInit();
 
-    return SafeArea(
-      child: Scaffold(
-        body: GetBuilder(
+    return Scaffold(
+      body: SafeArea(
+        child: GetBuilder(
           init: mainController,
           builder: (controller) => (mainController.isLoading == false)
               ? Column(
                   children: [
-                    OwnerInformation(owner: owner),
+                    OwnerInformation(owner: mainController.owner),
                     UsersList(mainController: mainController),
                   ],
                 )
@@ -75,7 +73,7 @@ class UsersList extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
+                        SizedBox(
                           height: 60,
                           width: 60,
                           child: CircleAvatar(
@@ -166,9 +164,7 @@ class OwnerInformation extends StatelessWidget {
                 ),
               ),
               onTap: () => Get.to(
-                OwnerProfilePage(
-                  owner: owner,
-                ),
+                const OwnerProfilePage(),
               ),
             ),
             const SizedBox(

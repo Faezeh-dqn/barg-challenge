@@ -1,42 +1,36 @@
 import 'package:challenge/models/user.dart';
-import 'package:challenge/viewmodels/friend_profile_viewmodel.dart';
-import 'package:challenge/views/owner_profile_page.dart';
+
 import 'package:challenge/views/theme/colorsPalette.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FriendProfilePage extends StatelessWidget {
-  User owner;
-  FriendProfilePage({required this.owner});
+  final User friend;
+  const FriendProfilePage({Key? key, required this.friend}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    FriendProfileController friendProfileController =
-        Get.put(FriendProfileController());
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: GetBuilder(
-            init: friendProfileController,
-            builder: (controller) => Column(
-              children: [
-                BackButtonAndName(
-                    friendProfileController: friendProfileController,
-                    owner: owner),
-                FriendInfoCard(owner: owner),
-                (owner.isOwner == true)
-                    ? const EditButton()
-                    : Divider(
-                        color: dividerColor,
-                        endIndent: 10,
-                        indent: 10,
-                      ),
-                const FriendsLabel(),
-                FriendsList(owner: owner),
-                const GreetingLabel(),
-                GreetingBox(owner: owner),
-              ],
-            ),
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              BackButtonAndName(
+                friend: friend,
+              ),
+              FriendInfoCard(friend: friend),
+              (friend.isOwner == true)
+                  ? const EditButton()
+                  : Divider(
+                      color: dividerColor,
+                      endIndent: 10,
+                      indent: 10,
+                    ),
+              const FriendsLabel(),
+              FriendsList(friend: friend),
+              const GreetingLabel(),
+              GreetingBox(friend: friend),
+            ],
           ),
         ),
       ),
@@ -47,10 +41,10 @@ class FriendProfilePage extends StatelessWidget {
 class GreetingBox extends StatelessWidget {
   const GreetingBox({
     Key? key,
-    required this.owner,
+    required this.friend,
   }) : super(key: key);
 
-  final User owner;
+  final User friend;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +66,7 @@ class GreetingBox extends StatelessWidget {
             vertical: 10,
           ),
           child: Text(
-            owner.greeting,
+            friend.greeting,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -115,10 +109,10 @@ class GreetingLabel extends StatelessWidget {
 class FriendsList extends StatelessWidget {
   const FriendsList({
     Key? key,
-    required this.owner,
+    required this.friend,
   }) : super(key: key);
 
-  final User owner;
+  final User friend;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +121,7 @@ class FriendsList extends StatelessWidget {
       width: double.infinity,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: owner.friends.length,
+        itemCount: friend.friends.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.symmetric(
@@ -136,14 +130,14 @@ class FriendsList extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () async {},
               child: Text(
-                owner.friends[index].name,
+                friend.friends[index].name,
                 style: TextStyle(
                   color: black,
                   fontSize: 17,
                 ),
               ),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(primaryColor),
+                backgroundColor: MaterialStateProperty.all(green),
                 elevation: MaterialStateProperty.all(0),
                 fixedSize: MaterialStateProperty.all(
                   const Size(
@@ -217,10 +211,10 @@ class EditButton extends StatelessWidget {
 class FriendInfoCard extends StatelessWidget {
   const FriendInfoCard({
     Key? key,
-    required this.owner,
+    required this.friend,
   }) : super(key: key);
 
-  final User owner;
+  final User friend;
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +237,7 @@ class FriendInfoCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Balance : ${owner.balance}",
+                "Balance : ${friend.balance}",
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -253,15 +247,15 @@ class FriendInfoCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Age : ${owner.age}",
+                    "Age : ${friend.age}",
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const Text(
-                    "Registered :owner.registered",
-                    style: TextStyle(
+                  Text(
+                    "Registered :${findRegiteredTime(friend.registered)}",
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -269,7 +263,7 @@ class FriendInfoCard extends StatelessWidget {
                 ],
               ),
               Text(
-                "About : ${owner.about}",
+                "About : ${friend.about}",
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -283,17 +277,23 @@ class FriendInfoCard extends StatelessWidget {
       ),
     );
   }
+
+  findRegiteredTime(String dateTime) {
+    String time = dateTime.substring(20);
+    String hour = time.substring(1, 3);
+    String min = time.substring(5);
+    String finalTime = "$hour : $min";
+    return finalTime;
+  }
 }
 
 class BackButtonAndName extends StatelessWidget {
   const BackButtonAndName({
     Key? key,
-    required this.friendProfileController,
-    required this.owner,
+    required this.friend,
   }) : super(key: key);
 
-  final FriendProfileController friendProfileController;
-  final User owner;
+  final User friend;
 
   @override
   Widget build(BuildContext context) {
@@ -303,11 +303,7 @@ class BackButtonAndName extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: IconButton(
             onPressed: () {
-              Get.off(
-                OwnerProfilePage(
-                  owner: friendProfileController.globalState.user,
-                ),
-              );
+              Get.back();
             },
             icon: const Icon(
               Icons.arrow_back_ios,
@@ -316,7 +312,7 @@ class BackButtonAndName extends StatelessWidget {
           ),
         ),
         Text(
-          owner.name,
+          friend.name,
           style: const TextStyle(
             fontSize: 23,
             fontWeight: FontWeight.w700,

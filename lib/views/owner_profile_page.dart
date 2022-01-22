@@ -1,31 +1,33 @@
 import 'package:challenge/models/user.dart';
-import 'package:challenge/viewmodels/profile_viewmodel.dart';
+import 'package:challenge/viewmodels/owner_profile_viewmodel.dart';
 import 'package:challenge/views/friend_profile_page.dart';
-import 'package:challenge/views/main_page.dart';
+
 import 'package:challenge/views/theme/colorsPalette.dart';
 import 'package:challenge/views/theme/text_style.dart';
-import 'package:challenge/views/widgets/main_skeleton_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OwnerProfilePage extends StatelessWidget {
-  User owner;
-  OwnerProfilePage({required this.owner});
+  const OwnerProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ProfileConroller profileController = Get.put(ProfileConroller());
-    return SafeArea(
-      child: Scaffold(
-        body: GetBuilder(
+    profileController.onInit();
+    return Scaffold(
+      body: SafeArea(
+        child: GetBuilder(
           init: profileController,
           builder: (controller) => SingleChildScrollView(
             child: Column(
               children: [
-                BackButtonAndName(owner: owner),
-                UserInfoCard(owner: owner),
-                (owner.isOwner == true)
+                BackButtonAndName(owner: profileController.owner),
+                UserInfoCard(
+                  owner: profileController.owner,
+                  profileConroller: profileController,
+                ),
+                (profileController.owner.isOwner == true)
                     ? const EditButton()
                     : Divider(
                         color: dividerColor,
@@ -34,11 +36,11 @@ class OwnerProfilePage extends StatelessWidget {
                       ),
                 const Friendslabel(),
                 FriendsList(
-                  owner: owner,
+                  owner: profileController.owner,
                   profileConroller: profileController,
                 ),
                 const GreetingLabel(),
-                GreetingBox(owner: owner),
+                GreetingBox(owner: profileController.owner),
               ],
             ),
           ),
@@ -171,7 +173,7 @@ class FriendsList extends StatelessWidget {
                     .getFriendProfile(owner.friends[index].guid);
 
                 Get.to(
-                  FriendProfilePage(owner: profileConroller.friend),
+                  FriendProfilePage(friend: profileConroller.friend),
                 );
               },
               child: Text(
@@ -228,12 +230,12 @@ class EditButton extends StatelessWidget {
 }
 
 class UserInfoCard extends StatelessWidget {
-  const UserInfoCard({
-    Key? key,
-    required this.owner,
-  }) : super(key: key);
+  const UserInfoCard(
+      {Key? key, required this.owner, required this.profileConroller})
+      : super(key: key);
 
   final User owner;
+  final ProfileConroller profileConroller;
 
   @override
   Widget build(BuildContext context) {
@@ -267,7 +269,7 @@ class UserInfoCard extends StatelessWidget {
                 children: [
                   Text("Age : ${owner.age}", style: textStyle),
                   Text(
-                    "Registered :owner.registered",
+                    "Registered :${profileConroller.findRegiteredTime(owner.registered)}",
                     style: textStyle,
                   ),
                 ],
@@ -300,9 +302,7 @@ class BackButtonAndName extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: IconButton(
             onPressed: () {
-              Get.off(
-                Mainpage(owner: owner),
-              );
+              Get.back();
             },
             icon: const Icon(
               Icons.arrow_back_ios,

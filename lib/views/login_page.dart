@@ -12,9 +12,9 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginController = Get.put(LoginController());
 
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: GetBuilder(
             init: loginController,
             builder: (controller) => Column(
@@ -76,12 +76,11 @@ class LoginButton extends StatelessWidget {
 
           if (result == false) {
             showSnackbar(
-              "Something is wrong",
+              "invalid combination of username and password!",
               color: errorColor,
             );
           } else {
-            await loginController.getUsers();
-            await Get.to(Mainpage(owner: loginController.owner));
+            Get.to(const Mainpage());
           }
         },
         child: const Text(
@@ -130,7 +129,7 @@ class PasswordTextField extends StatelessWidget {
           ),
         ),
         onChanged: (value) {
-          loginController.getPassword(value);
+          loginController.setPassword(value);
         },
       ),
     );
@@ -162,7 +161,7 @@ class UserNameTextField extends StatelessWidget {
           ),
         ),
         onChanged: (value) {
-          loginController.getUserName(value);
+          loginController.setUserName(value);
         },
       ),
     );

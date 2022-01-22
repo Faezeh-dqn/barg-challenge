@@ -1,5 +1,5 @@
 import 'package:challenge/services/global_state.dart';
-import 'package:challenge/user_repository.dart';
+import 'package:challenge/services/user_repository.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt getIt = GetIt.instance;
